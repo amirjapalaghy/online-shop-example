@@ -4,6 +4,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
+
 def _get_avatar_upload_path(instance, filename):
     now = timezone.now()
     base_path = 'avatar'
@@ -20,6 +21,7 @@ class Product(models.Model):
     discount = models.IntegerField(default=0)
     short_description = models.TextField(max_length=300)
     description = models.TextField()
+    additional_info = models.TextField(null=True, blank=True)
     count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -44,3 +46,10 @@ class Color(models.Model):
     def __str__(self):
         return self.name
 
+
+class Information(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='information', null=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text[:20]
