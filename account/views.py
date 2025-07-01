@@ -1,12 +1,12 @@
 from django.contrib.auth import login, authenticate, logout
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from ghasedakpack import Ghasedak
 from random import randint
 
 from account.models import User, Otp
-from .forms import LoginForm, RegisterForm, CheckOtpForm
+from .forms import LoginForm, RegisterForm, CheckOtpForm, AddAddressForm
 
 SMS = Ghasedak('30144696d43ac2188d91293b554a3925166b897de938ad8bb09909448acf40d6kkThPKhLWhQZVoZt')
 
@@ -24,6 +24,9 @@ class UserLoginView(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                next_page = request.GET.get('next')
+                if next_page:
+                    return redirect(next_page)
                 return redirect('home:home')
         return render(request, 'account/login.html', {'form': form})
 
@@ -78,6 +81,25 @@ class CheckOtpView(View):
             form.add_error('phone', 'invalid phone')
 
         return render(request, 'account/register.html', {'form': form})
+
+
+class AddAddressView(View):
+
+    def get(self, request):
+        form = AddAddressForm()
+        next_page = request.GET.get('next', '')
+        return render(request, 'account/add_address.html', {'form': form, 'next': next_page})
+
+    def post(self, request):
+        form = AddAddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            next_page = request.POST.get('next')
+            if next_page:
+                return redirect(next_page)
+        return render(request, 'account/add_address.html', {'form': form})
 
 
 def logout_user(request):

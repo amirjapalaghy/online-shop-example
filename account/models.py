@@ -44,3 +44,15 @@ class Otp(models.Model):
 
     def __str__(self):
         return self.phone
+
+
+class UserAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')
+    full_name = models.CharField(max_length=30, verbose_name='Full name')
+    email = models.EmailField(max_length=255, unique=True, verbose_name='Email address')
+    phone = models.CharField(max_length=11, verbose_name='Phone number')
+    address = models.CharField(max_length=255, verbose_name='Address')
+    postal_code = models.CharField(max_length=30, verbose_name='Postal code')
+
+    def __str__(self):
+        return f'{self.full_name}-{self.email}-{self.phone}'

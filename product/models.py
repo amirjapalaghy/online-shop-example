@@ -16,6 +16,7 @@ def _get_avatar_upload_path(instance, filename):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
+    # price = models.DecimalField(decimal_places=3, max_digits=10)
     price = models.IntegerField()
     image = models.ImageField(upload_to=_get_avatar_upload_path, null=True, blank=True)
     discount = models.IntegerField(default=0)
@@ -26,7 +27,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
-    size = models.ManyToManyField('Size', related_name='products', blank=True, null=True)
+    size = models.ManyToManyField('Size', related_name='products', blank=True)
     color = models.ManyToManyField('Color', related_name='products')
 
     def __str__(self):

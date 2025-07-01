@@ -1,7 +1,7 @@
 from django.core import validators
 
 from django import forms
-from .models import User
+from .models import User, UserAddress
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
@@ -85,3 +85,14 @@ class CheckOtpForm(forms.Form):
         ),
         validators=[validators.MinLengthValidator(5)]
     )
+
+
+class AddAddressForm(forms.ModelForm):
+    class Meta:
+        model = UserAddress
+        exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
