@@ -29,10 +29,14 @@ class Product(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     size = models.ManyToManyField('Size', related_name='products', blank=True)
     color = models.ManyToManyField('Color', related_name='products')
+    category = models.ManyToManyField('Category', related_name='products', blank=True, null=True)
 
     def __str__(self):
         return f'{self.name} -- {self.price}'
 
+    def discount_price(self):
+        price = self.price - self.price * self.discount/100
+        return price
 
 class Size(models.Model):
     name = models.CharField(max_length=5)
@@ -54,3 +58,11 @@ class Information(models.Model):
 
     def __str__(self):
         return self.text[:20]
+
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name

@@ -1,0 +1,21 @@
+{% load category_tags %}
+<li class="nav-item dropdown dropright" data-bs-auto-close="outside">
+  <a href="#"
+     class="nav-link dropdown-toggle"
+     data-toggle="dropdown"
+     aria-expanded="false">
+    {{ category.name }}
+    {% if category.children.exists %}
+      <i class="fa fa-angle-right float-right mt-1"></i>
+    {% endif %}
+  </a>
+
+  {% if category.children.exists %}
+    <ul class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+      {% for child in category.children.all %}
+        {% render_category child %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</li>

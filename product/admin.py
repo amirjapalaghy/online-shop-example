@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from product.models import Product, Color, Size, Information
+from product.models import Product, Color, Size, Information, Category
 
 
 class InformationAdmin(admin.StackedInline):
@@ -14,6 +14,12 @@ class ProductAdmin(admin.ModelAdmin):
         fields = '__all__'
         list_display = ('name', 'price', 'image', 'created_at')
         ordering = ('modified_at',)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'parent']
+    prepopulated_fields = {'slug': ('name',)}
 
 
 admin.site.register(Color)
